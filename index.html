@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Marginalia Hub</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23181713'/%3E%3Cpath d='M9 7h10l5 5v13H9z' fill='none' stroke='%23f8f5ee' stroke-width='2'/%3E%3Cpath d='M19 7v6h5M12 16h9M12 20h7' stroke='%23f8f5ee' stroke-width='2'/%3E%3C/svg%3E" />
+    <style>
+      :root {
+        --paper: #f8f5ee;
+        --ink: #181713;
+        --muted: #6f695d;
+        --rule: #d8d0c0;
+        --panel: #fffdf7;
+        --green: #496f5d;
+        --blue: #3d5d7a;
+        --red: #974b42;
+        --yellow: #b68a35;
+        --shadow: 0 18px 45px rgba(44, 36, 24, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          linear-gradient(90deg, rgba(151, 75, 66, 0.18) 0 1px, transparent 1px 100%),
+          linear-gradient(rgba(24, 23, 19, 0.045) 0 1px, transparent 1px 100%),
+          var(--paper);
+        background-size: 72px 100%, 100% 26px, auto;
+        color: var(--ink);
+        font-family: Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      .shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 44px;
+      }
+
+      .masthead {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 20px;
+        align-items: end;
+        padding: 0 0 22px;
+        border-bottom: 2px solid var(--ink);
+      }
+
+      .brand {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        min-width: 0;
+      }
+
+      .mark {
+        width: 62px;
+        height: 78px;
+        display: grid;
+        place-items: center;
+        color: var(--panel);
+        background: var(--ink);
+        box-shadow: 7px 7px 0 var(--green);
+        flex: 0 0 auto;
+      }
+
+      .mark svg {
+        width: 38px;
+        height: 52px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.15rem, 6vw, 5.6rem);
+        line-height: 0.88;
+        letter-spacing: 0;
+      }
+
+      .subtitle {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 1.03rem;
+        max-width: 680px;
+      }
+
+      .snapshot {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(82px, 1fr));
+        gap: 8px;
+        min-width: 280px;
+      }
+
+      .stat {
+        border: 1px solid var(--ink);
+        background: var(--panel);
+        padding: 10px 12px;
+        box-shadow: 4px 4px 0 rgba(24, 23, 19, 0.16);
+      }
+
+      .stat strong {
+        display: block;
+        font: 700 1.35rem/1 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      }
+
+      .stat span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: minmax(220px, 1fr) 170px 170px;
+        gap: 10px;
+        align-items: center;
+        margin: 22px 0;
+      }
+
+      .field,
+      .select {
+        min-height: 46px;
+        width: 100%;
+        border: 1px solid var(--ink);
+        background: var(--panel);
+        color: var(--ink);
+        border-radius: 0;
+        padding: 10px 12px;
+        outline-offset: 3px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+
+      .tab {
+        border: 1px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        min-height: 36px;
+        padding: 7px 12px;
+        cursor: pointer;
+      }
+
+      .tab[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      .catalog {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 16px;
+      }
+
+      .package {
+        position: relative;
+        min-height: 310px;
+        background: var(--panel);
+        border: 1px solid var(--ink);
+        box-shadow: var(--shadow);
+        padding: 16px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        overflow: hidden;
+      }
+
+      .package::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 9px;
+        background: var(--accent, var(--green));
+      }
+
+      .package-head {
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr);
+        gap: 13px;
+      }
+
+      .glyph {
+        width: 54px;
+        height: 54px;
+        border: 1px solid var(--ink);
+        background:
+          radial-gradient(circle at 14px 14px, var(--accent, var(--green)) 0 5px, transparent 6px),
+          linear-gradient(135deg, transparent 0 46%, rgba(24, 23, 19, 0.18) 47% 53%, transparent 54%),
+          var(--paper);
+      }
+
+      .package h2 {
+        margin: 0;
+        font-size: 1.42rem;
+        line-height: 1.05;
+      }
+
+      .id {
+        margin-top: 6px;
+        color: var(--muted);
+        font: 0.76rem/1.35 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+        overflow-wrap: anywhere;
+      }
+
+      .summary {
+        margin: 16px 0;
+        color: #332f28;
+        line-height: 1.45;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+
+      .chip {
+        border: 1px solid var(--rule);
+        background: rgba(255, 255, 255, 0.55);
+        color: var(--muted);
+        padding: 4px 7px;
+        font: 0.74rem/1 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 18px;
+      }
+
+      .link,
+      .copy {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        border: 1px solid var(--ink);
+        padding: 8px 11px;
+        text-decoration: none;
+        color: var(--ink);
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .link {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      .empty {
+        grid-column: 1 / -1;
+        border: 1px dashed var(--ink);
+        background: rgba(255, 253, 247, 0.72);
+        padding: 28px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .footnote {
+        margin-top: 24px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .toast {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        max-width: min(360px, calc(100% - 36px));
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: var(--paper);
+        padding: 11px 14px;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 160ms ease, transform 160ms ease;
+        pointer-events: none;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 760px) {
+        .masthead,
+        .toolbar {
+          grid-template-columns: 1fr;
+        }
+
+        .snapshot {
+          min-width: 0;
+        }
+
+        .brand {
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <div class="brand">
+          <div class="mark" aria-hidden="true">
+            <svg viewBox="0 0 42 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 5h23l9 9v39H5V5Z" stroke="currentColor" stroke-width="3" />
+              <path d="M27 6v11h10" stroke="currentColor" stroke-width="3" />
+              <path d="M12 22h18M12 31h14M12 40h18" stroke="currentColor" stroke-width="3" />
+              <path d="M33 29l6 4-6 4" stroke="currentColor" stroke-width="3" />
+            </svg>
+          </div>
+          <div>
+            <h1>Marginalia Hub</h1>
+            <p class="subtitle">Experimental package catalog for reader modules, sleep screens, themes, and apps.</p>
+          </div>
+        </div>
+        <section class="snapshot" aria-label="Catalog snapshot">
+          <div class="stat"><strong id="packageCount">0</strong><span>packages</span></div>
+          <div class="stat"><strong id="moduleCount">0</strong><span>modules</span></div>
+          <div class="stat"><strong id="appCount">0</strong><span>apps</span></div>
+        </section>
+      </header>
+
+      <section class="toolbar" aria-label="Catalog filters">
+        <input class="field" id="search" type="search" placeholder="Search packages" autocomplete="off" />
+        <select class="select" id="device">
+          <option value="">All devices</option>
+          <option value="xteink-x3">Xteink X3</option>
+          <option value="xteink-x4">Xteink X4</option>
+        </select>
+        <select class="select" id="execution">
+          <option value="">All runtimes</option>
+          <option value="module">Modules</option>
+          <option value="app">Apps</option>
+        </select>
+      </section>
+
+      <nav class="tabs" aria-label="Package kinds" id="kindTabs"></nav>
+      <section class="catalog" id="catalog" aria-live="polite"></section>
+      <p class="footnote" id="generatedAt"></p>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      const state = {
+        entries: [],
+        kind: '',
+        query: '',
+        device: '',
+        execution: ''
+      };
+
+      const colors = {
+        theme: '#496f5d',
+        sleep_screen: '#3d5d7a',
+        reader_module: '#b68a35',
+        integration: '#6f695d',
+        app: '#974b42'
+      };
+
+      const kindLabels = {
+        theme: 'Themes',
+        sleep_screen: 'Sleep Screens',
+        reader_module: 'Reader Modules',
+        integration: 'Integrations',
+        app: 'Apps'
+      };
+
+      function normalize(value) {
+        return String(value || '').toLowerCase();
+      }
+
+      function matches(entry) {
+        const haystack = normalize([entry.name, entry.id, entry.summary, entry.kind, entry.execution].join(' '));
+        const target = entry.target || {};
+        return (!state.query || haystack.includes(normalize(state.query))) &&
+          (!state.kind || entry.kind === state.kind) &&
+          (!state.execution || entry.execution === state.execution) &&
+          (!state.device || (target.devices || []).includes(state.device));
+      }
+
+      function renderTabs() {
+        const kinds = ['', ...Array.from(new Set(state.entries.map(entry => entry.kind))).sort()];
+        const tabs = document.getElementById('kindTabs');
+        tabs.replaceChildren();
+        for (const kind of kinds) {
+          const button = document.createElement('button');
+          button.className = 'tab';
+          button.type = 'button';
+          button.textContent = kind ? (kindLabels[kind] || kind) : 'All';
+          button.setAttribute('aria-pressed', String(state.kind === kind));
+          button.addEventListener('click', () => {
+            state.kind = kind;
+            render();
+          });
+          tabs.appendChild(button);
+        }
+      }
+
+      function packageCard(entry) {
+        const card = document.createElement('article');
+        card.className = 'package';
+        card.style.setProperty('--accent', colors[entry.kind] || colors.integration);
+
+        const head = document.createElement('div');
+        head.className = 'package-head';
+        const glyph = document.createElement('div');
+        glyph.className = 'glyph';
+        const titleWrap = document.createElement('div');
+        const title = document.createElement('h2');
+        title.textContent = entry.name;
+        const id = document.createElement('div');
+        id.className = 'id';
+        id.textContent = entry.id;
+        titleWrap.append(title, id);
+        head.append(glyph, titleWrap);
+
+        const body = document.createElement('div');
+        const summary = document.createElement('p');
+        summary.className = 'summary';
+        summary.textContent = entry.summary || 'No summary provided.';
+        const chips = document.createElement('div');
+        chips.className = 'chips';
+        const target = entry.target || {};
+        const chipValues = [
+          entry.kind,
+          entry.execution,
+          entry.channel,
+          'v' + entry.version,
+          ...(target.devices || []),
+          ...(target.chipFamilies || []),
+          'api ' + (target.apiLevel || 1)
+        ];
+        for (const value of chipValues.filter(Boolean)) {
+          const chip = document.createElement('span');
+          chip.className = 'chip';
+          chip.textContent = value;
+          chips.appendChild(chip);
+        }
+        body.append(summary, chips);
+
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+        const source = document.createElement('a');
+        source.className = 'link';
+        source.href = entry.artifact && entry.artifact.url ? entry.artifact.url : '#';
+        source.textContent = 'Source';
+        const copy = document.createElement('button');
+        copy.className = 'copy';
+        copy.type = 'button';
+        copy.textContent = 'Copy ID';
+        copy.addEventListener('click', async () => {
+          await navigator.clipboard.writeText(entry.id);
+          toast('Copied ' + entry.id);
+        });
+        actions.append(source, copy);
+
+        card.append(head, body, actions);
+        return card;
+      }
+
+      function renderStats(entries) {
+        document.getElementById('packageCount').textContent = String(entries.length);
+        document.getElementById('moduleCount').textContent = String(entries.filter(entry => entry.execution === 'module').length);
+        document.getElementById('appCount').textContent = String(entries.filter(entry => entry.execution === 'app').length);
+      }
+
+      function render() {
+        renderTabs();
+        renderStats(state.entries);
+        const catalog = document.getElementById('catalog');
+        catalog.replaceChildren();
+        const entries = state.entries.filter(matches);
+        if (entries.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'empty';
+          empty.textContent = 'No packages match these filters.';
+          catalog.appendChild(empty);
+          return;
+        }
+        for (const entry of entries) catalog.appendChild(packageCard(entry));
+      }
+
+      function toast(message) {
+        const el = document.getElementById('toast');
+        el.textContent = message;
+        el.classList.add('show');
+        window.clearTimeout(toast.timer);
+        toast.timer = window.setTimeout(() => el.classList.remove('show'), 1800);
+      }
+
+      async function loadCatalog() {
+        const response = await fetch('public/v1/catalog.json');
+        if (!response.ok) throw new Error('Catalog request failed');
+        const catalog = await response.json();
+        state.entries = catalog.entries || [];
+        document.getElementById('generatedAt').textContent =
+          'Catalog snapshot generated ' + (catalog.generatedAt || 'unknown') + '. Unsigned experimental feed.';
+        render();
+      }
+
+      document.getElementById('search').addEventListener('input', event => {
+        state.query = event.target.value;
+        render();
+      });
+      document.getElementById('device').addEventListener('change', event => {
+        state.device = event.target.value;
+        render();
+      });
+      document.getElementById('execution').addEventListener('change', event => {
+        state.execution = event.target.value;
+        render();
+      });
+
+      loadCatalog().catch(error => {
+        const catalog = document.getElementById('catalog');
+        catalog.innerHTML = '<div class="empty">Catalog could not be loaded.</div>';
+        document.getElementById('generatedAt').textContent = error.message;
+      });
+    </script>
+  </body>
+</html>

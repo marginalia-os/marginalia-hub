@@ -4,6 +4,9 @@ Catalog, publishing, and discovery hub for Marginalia packages.
 
 This service sits between package authors and the firmware. It does not execute packages.
 
+The current repo includes a static package browser in [`index.html`](./index.html). Serve the repo root over HTTP and
+open `/` to browse the bootstrap catalog.
+
 ## Responsibilities
 
 - host the public package catalog
