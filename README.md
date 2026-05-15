@@ -30,4 +30,5 @@ entry shape as `marginalia-registry`, wrapped in a catalog envelope:
 - `signature`
 - `entries`
 
-Production catalogs must replace `replace-me` hashes with real checksums and sign the snapshot.
+The bootstrap catalog points at `.mpkg.zip` release assets with real SHA-256 hashes. Production catalogs must also sign
+the snapshot.
