@@ -29,6 +29,9 @@ jobs:
       - name: Validate catalog JSON
         run: python -m json.tool public/v1/catalog.json >/dev/null
 
+      - name: Check catalog matches registry
+        run: ./scripts/check-registry-catalog.sh marginalia-registry
+
       - name: Check Vercel static output
         run: |
           ./scripts/sync-public-index.sh
