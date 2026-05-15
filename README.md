@@ -14,6 +14,8 @@ For Vercel, sync the page into `public/` before deploying because Vercel serves 
 vercel deploy . -y
 ```
 
+`vercel.json` keeps catalog responses CORS-readable from the device-hosted package manager.
+
 ## Responsibilities
 
 - host the public package catalog
