@@ -29,6 +29,11 @@ jobs:
       - name: Validate catalog JSON
         run: python -m json.tool public/v1/catalog.json >/dev/null
 
+      - name: Check Vercel static output
+        run: |
+          ./scripts/sync-public-index.sh
+          diff -u index.html public/index.html
+
       - name: Validate catalog entries
         run: |
           python - <<'PY'

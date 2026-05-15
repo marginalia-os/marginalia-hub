@@ -7,6 +7,13 @@ This service sits between package authors and the firmware. It does not execute 
 The current repo includes a static package browser in [`index.html`](./index.html). Serve the repo root over HTTP and
 open `/` to browse the bootstrap catalog.
 
+For Vercel, sync the page into `public/` before deploying because Vercel serves that directory as static output:
+
+```sh
+./scripts/sync-public-index.sh
+vercel deploy . -y
+```
+
 ## Responsibilities
 
 - host the public package catalog
