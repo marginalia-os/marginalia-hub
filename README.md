@@ -39,3 +39,9 @@ entry shape as `marginalia-registry`, wrapped in a catalog envelope:
 
 The bootstrap catalog points at `.mpkg.zip` release assets with real SHA-256 hashes. Production catalogs must also sign
 the snapshot.
+
+Check that the published bootstrap catalog still matches the registry source:
+
+```sh
+./scripts/check-registry-catalog.sh ../marginalia-registry
+```
