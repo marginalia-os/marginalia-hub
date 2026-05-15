@@ -16,3 +16,15 @@ This service sits between package authors and the firmware. It does not execute 
 ## API contract
 
 See [`docs/hub-contract.md`](./docs/hub-contract.md)
+
+## Bootstrap catalog
+
+`public/v1/catalog.json` is a static unsigned catalog snapshot for early firmware and UI experiments. It uses the same
+entry shape as `marginalia-registry`, wrapped in a catalog envelope:
+
+- `schemaVersion`
+- `generatedAt`
+- `signature`
+- `entries`
+
+Production catalogs must replace `replace-me` hashes with real checksums and sign the snapshot.

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-05-15T00:00:00Z",
+  "signature": null,
+  "entries": [
+    {
+      "id": "org.marginalia.examples.dark-mode",
+      "name": "Dark Mode",
+      "version": "0.1.0",
+      "kind": "theme",
+      "execution": "module",
+      "channel": "experimental",
+      "summary": "A simple dark theme for the Marginalia reader UI",
+      "author": "Marginalia",
+      "target": {
+        "devices": ["xteink-x3", "xteink-x4"],
+        "chipFamilies": ["esp32-c3"],
+        "minFirmware": "0.1.0",
+        "apiLevel": 1,
+        "ramClass": "low",
+        "requiresPSRAM": false
+      },
+      "integrity": {
+        "sha256": "replace-me"
+      },
+      "artifact": {
+        "url": "https://github.com/marginalia-os/marginalia-examples/tree/main/dark-mode-theme",
+        "format": "folder-source"
+      }
+    },
+    {
+      "id": "org.marginalia.examples.game-of-life",
+      "name": "Game of Life",
+      "version": "0.1.0",
+      "kind": "sleep_screen",
+      "execution": "module",
+      "channel": "experimental",
+      "summary": "Conway's Game of Life for the sleep screen",
+      "author": "Marginalia",
+      "target": {
+        "devices": ["xteink-x3", "xteink-x4"],
+        "chipFamilies": ["esp32-c3"],
+        "minFirmware": "0.1.0",
+        "apiLevel": 1,
+        "ramClass": "low",
+        "requiresPSRAM": false
+      },
+      "integrity": {
+        "sha256": "replace-me"
+      },
+      "artifact": {
+        "url": "https://github.com/marginalia-os/marginalia-examples/tree/main/game-of-life-sleep-screen",
+        "format": "folder-source"
+      }
+    },
+    {
+      "id": "org.marginalia.examples.hangman",
+      "name": "Hangman",
+      "version": "0.1.0",
+      "kind": "app",
+      "execution": "app",
+      "channel": "experimental",
+      "summary": "A simple standalone Hangman game",
+      "author": "Marginalia",
+      "target": {
+        "devices": ["xteink-x3", "xteink-x4"],
+        "chipFamilies": ["esp32-c3"],
+        "minFirmware": "0.1.0",
+        "apiLevel": 1,
+        "ramClass": "low",
+        "requiresPSRAM": false
+      },
+      "integrity": {
+        "sha256": "replace-me"
+      },
+      "artifact": {
+        "url": "https://github.com/marginalia-os/marginalia-examples/tree/main/hangman-app",
+        "format": "folder-source"
+      }
+    },
+    {
+      "id": "org.marginalia.examples.reading-stats",
+      "name": "Reading Stats",
+      "version": "0.1.0",
+      "kind": "reader_module",
+      "execution": "module",
+      "channel": "experimental",
+      "summary": "Collects reading session statistics",
+      "author": "Marginalia",
+      "target": {
+        "devices": ["xteink-x3", "xteink-x4"],
+        "chipFamilies": ["esp32-c3"],
+        "minFirmware": "0.1.0",
+        "apiLevel": 1,
+        "ramClass": "low",
+        "requiresPSRAM": false
+      },
+      "integrity": {
+        "sha256": "replace-me"
+      },
+      "artifact": {
+        "url": "https://github.com/marginalia-os/marginalia-examples/tree/main/reading-stats-module",
+        "format": "folder-source"
+      }
+    }
+  ]
+}

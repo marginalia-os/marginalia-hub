@@ -16,7 +16,14 @@ installation, activation, and runtime enforcement.
 
 ## Catalog responsibilities
 
-The catalog should include:
+`GET /v1/catalog` returns a catalog envelope:
+
+- `schemaVersion`
+- `generatedAt`
+- `signature`
+- `entries`
+
+Each entry should include:
 
 - package id
 - package name
@@ -29,6 +36,9 @@ The catalog should include:
 - integrity hashes
 - signature metadata
 - deprecation links
+
+The bootstrap repo includes `public/v1/catalog.json` as an unsigned development snapshot. Firmware may use unsigned
+snapshots only for local development; release firmware should require a valid signature.
 
 ## Firmware flow
 
