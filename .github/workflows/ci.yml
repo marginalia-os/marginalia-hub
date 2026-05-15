@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/checkout@v6
+        with:
+          repository: marginalia-os/marginalia-registry
+          path: marginalia-registry
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install jsonschema
+
+      - name: Validate catalog JSON
+        run: python -m json.tool public/v1/catalog.json >/dev/null
+
+      - name: Validate catalog entries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schema = json.loads(Path("marginalia-registry/schema/catalog-entry.v1.schema.json").read_text())
+          validator = Draft202012Validator(schema)
+          catalog = json.loads(Path("public/v1/catalog.json").read_text())
+          ok = True
+          for entry in catalog["entries"]:
+              enriched = dict(entry)
+              enriched.setdefault("releasedAt", catalog["generatedAt"])
+              enriched.setdefault("updatedAt", catalog["generatedAt"])
+              errors = sorted(validator.iter_errors(enriched), key=lambda error: list(error.path))
+              if errors:
+                  ok = False
+                  print(f"{entry.get('id', '<unknown>')}: invalid")
+                  for error in errors:
+                      location = ".".join(str(part) for part in error.path) or "<root>"
+                      print(f"  {location}: {error.message}")
+              else:
+                  print(f"{entry['id']}: ok")
+          raise SystemExit(0 if ok else 1)
+          PY
+
+      - name: Check static browser
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html = Path("index.html").read_text()
+          for needle in ("Marginalia Hub", "public/v1/catalog.json", "Copy ID"):
+              if needle not in html:
+                  raise SystemExit(f"missing expected text: {needle}")
+          PY
