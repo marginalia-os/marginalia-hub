@@ -464,8 +464,12 @@
         actions.className = 'actions';
         const source = document.createElement('a');
         source.className = 'link';
-        source.href = artifact.url || '#';
-        source.textContent = 'Download';
+        source.href = entry.homepage || (entry.source && entry.source.url) || '#';
+        source.textContent = 'Source';
+        const download = document.createElement('a');
+        download.className = 'link';
+        download.href = artifact.url || '#';
+        download.textContent = 'Download';
         const copy = document.createElement('button');
         copy.className = 'copy';
         copy.type = 'button';
@@ -474,7 +478,7 @@
           await navigator.clipboard.writeText(entry.id);
           toast('Copied ' + entry.id);
         });
-        actions.append(source, copy);
+        actions.append(source, download, copy);
 
         card.append(head, body, actions);
         return card;
@@ -517,7 +521,7 @@
         const catalog = await response.json();
         state.entries = catalog.entries || [];
         document.getElementById('generatedAt').textContent =
-          'Catalog snapshot generated ' + (catalog.generatedAt || 'unknown') + '. Unsigned experimental feed.';
+          'Catalog snapshot generated ' + (catalog.generatedAt || 'unknown') + '. Source-visible community feed.';
         render();
       }
 

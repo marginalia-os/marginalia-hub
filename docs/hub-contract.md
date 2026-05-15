@@ -2,8 +2,8 @@
 
 ## Core idea
 
-The hub is the discovery and trust layer. Firmware downloads packages from it, but firmware remains responsible for
-installation, activation, and runtime enforcement.
+The hub is the community discovery layer. Firmware downloads packages from it, but firmware remains responsible for
+installation, activation, integrity checks, and runtime enforcement.
 
 ## Public endpoints
 
@@ -32,21 +32,22 @@ Each entry should include:
 - execution class
 - target compatibility
 - release channel
+- source repository, path, and ref
 - artifact URL
 - artifact format and byte size
 - integrity hashes
-- signature metadata
+- optional signature metadata
 - deprecation links
 
-The bootstrap repo includes `public/v1/catalog.json` as an unsigned development snapshot. Firmware may use unsigned
-snapshots only for local development; release firmware should require a valid signature.
+The bootstrap repo includes `public/v1/catalog.json` as a community snapshot. The catalog is intentionally source-first:
+entries point at reviewed source repositories and immutable release artifacts. Catalog signatures are optional for now.
 
 ## Firmware flow
 
-1. firmware fetches a signed catalog snapshot
+1. firmware fetches a catalog snapshot
 2. firmware filters entries by device and chip family
 3. firmware fetches the selected `.mpkg.zip` artifact
-4. firmware verifies checksum and signature
+4. firmware verifies the artifact checksum
 5. firmware installs locally
 6. firmware activates or queues the package
 
@@ -63,3 +64,4 @@ snapshots only for local development; release firmware should require a valid si
 - packages with a mismatched target are rejected
 - packages with unsupported schema versions are rejected
 - packages can be deprecated or revoked through the catalog
+- package source metadata is required so the community can review what produced the artifact

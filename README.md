@@ -20,7 +20,7 @@ vercel deploy . -y
 
 - host the public package catalog
 - validate package metadata and manifests
-- publish signed catalog snapshots
+- expose source repositories and release artifact checksums
 - provide package search and discovery
 - serve package artifacts
 - support submissions and deprecations
@@ -31,16 +31,17 @@ See [`docs/hub-contract.md`](./docs/hub-contract.md)
 
 ## Bootstrap catalog
 
-`public/v1/catalog.json` is a static unsigned catalog snapshot for early firmware and UI experiments. It uses the same
-entry shape as `marginalia-registry`, wrapped in a catalog envelope:
+`public/v1/catalog.json` is a static community catalog snapshot. It uses the same entry shape as
+`marginalia-registry`, wrapped in a catalog envelope:
 
 - `schemaVersion`
 - `generatedAt`
 - `signature`
 - `entries`
 
-The bootstrap catalog points at `.mpkg.zip` release assets with real SHA-256 hashes. Production catalogs must also sign
-the snapshot.
+The bootstrap catalog points at `.mpkg.zip` release assets with real SHA-256 hashes. It also includes source repository
+metadata so package entries can be reviewed like an RT-Thread package index. Catalog signatures are intentionally
+optional for now; firmware verifies archive hashes before staging downloads.
 
 Check that the published bootstrap catalog still matches the registry source:
 

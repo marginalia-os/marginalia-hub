@@ -13,6 +13,12 @@
       "summary": "A simple dark theme for the Marginalia reader UI",
       "author": "Marginalia",
       "homepage": "https://github.com/marginalia-os/marginalia-examples/tree/main/dark-mode-theme",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/marginalia-os/marginalia-examples.git",
+        "path": "dark-mode-theme",
+        "ref": "examples-v0.1.0"
+      },
       "target": {
         "devices": [
           "xteink-x3",
@@ -47,6 +53,12 @@
       "summary": "Conway's Game of Life for the sleep screen",
       "author": "Marginalia",
       "homepage": "https://github.com/marginalia-os/marginalia-examples/tree/main/game-of-life-sleep-screen",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/marginalia-os/marginalia-examples.git",
+        "path": "game-of-life-sleep-screen",
+        "ref": "examples-v0.1.0"
+      },
       "target": {
         "devices": [
           "xteink-x3",
@@ -81,6 +93,12 @@
       "summary": "A simple standalone Hangman game",
       "author": "Marginalia",
       "homepage": "https://github.com/marginalia-os/marginalia-examples/tree/main/hangman-app",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/marginalia-os/marginalia-examples.git",
+        "path": "hangman-app",
+        "ref": "examples-v0.1.0"
+      },
       "target": {
         "devices": [
           "xteink-x3",
@@ -115,6 +133,12 @@
       "summary": "Collects reading session statistics",
       "author": "Marginalia",
       "homepage": "https://github.com/marginalia-os/marginalia-examples/tree/main/reading-stats-module",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/marginalia-os/marginalia-examples.git",
+        "path": "reading-stats-module",
+        "ref": "examples-v0.1.0"
+      },
       "target": {
         "devices": [
           "xteink-x3",
