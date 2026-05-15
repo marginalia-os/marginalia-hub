@@ -439,10 +439,14 @@
         const chips = document.createElement('div');
         chips.className = 'chips';
         const target = entry.target || {};
+        const artifact = entry.artifact || {};
+        const sizeKb = artifact.size ? Math.ceil(artifact.size / 1024) + ' KB' : '';
         const chipValues = [
           entry.kind,
           entry.execution,
           entry.channel,
+          artifact.format,
+          sizeKb,
           'v' + entry.version,
           ...(target.devices || []),
           ...(target.chipFamilies || []),
@@ -460,8 +464,8 @@
         actions.className = 'actions';
         const source = document.createElement('a');
         source.className = 'link';
-        source.href = entry.artifact && entry.artifact.url ? entry.artifact.url : '#';
-        source.textContent = 'Source';
+        source.href = artifact.url || '#';
+        source.textContent = 'Download';
         const copy = document.createElement('button');
         copy.className = 'copy';
         copy.type = 'button';

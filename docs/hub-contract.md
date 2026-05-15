@@ -33,6 +33,7 @@ Each entry should include:
 - target compatibility
 - release channel
 - artifact URL
+- artifact format and byte size
 - integrity hashes
 - signature metadata
 - deprecation links
@@ -44,7 +45,7 @@ snapshots only for local development; release firmware should require a valid si
 
 1. firmware fetches a signed catalog snapshot
 2. firmware filters entries by device and chip family
-3. firmware fetches the selected artifact
+3. firmware fetches the selected `.mpkg.zip` artifact
 4. firmware verifies checksum and signature
 5. firmware installs locally
 6. firmware activates or queues the package

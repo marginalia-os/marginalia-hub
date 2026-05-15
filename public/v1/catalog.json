@@ -12,21 +12,30 @@
       "channel": "experimental",
       "summary": "A simple dark theme for the Marginalia reader UI",
       "author": "Marginalia",
+      "homepage": "https://github.com/marginalia-os/marginalia-examples/tree/main/dark-mode-theme",
       "target": {
-        "devices": ["xteink-x3", "xteink-x4"],
-        "chipFamilies": ["esp32-c3"],
+        "devices": [
+          "xteink-x3",
+          "xteink-x4"
+        ],
+        "chipFamilies": [
+          "esp32-c3"
+        ],
         "minFirmware": "0.1.0",
         "apiLevel": 1,
         "ramClass": "low",
         "requiresPSRAM": false
       },
       "integrity": {
-        "sha256": "replace-me"
+        "sha256": "fc5efe97b8f9c72e448a68bbd004aa536f9d44d947db771b3d81c61261c1e247"
       },
       "artifact": {
-        "url": "https://github.com/marginalia-os/marginalia-examples/tree/main/dark-mode-theme",
-        "format": "folder-source"
-      }
+        "url": "https://github.com/marginalia-os/marginalia-examples/releases/download/examples-v0.1.0/org.marginalia.examples.dark-mode-0.1.0.mpkg.zip",
+        "format": "mpkg.zip",
+        "size": 1094
+      },
+      "releasedAt": "2026-05-15T00:00:00Z",
+      "updatedAt": "2026-05-15T00:00:00Z"
     },
     {
       "id": "org.marginalia.examples.game-of-life",
@@ -37,21 +46,30 @@
       "channel": "experimental",
       "summary": "Conway's Game of Life for the sleep screen",
       "author": "Marginalia",
+      "homepage": "https://github.com/marginalia-os/marginalia-examples/tree/main/game-of-life-sleep-screen",
       "target": {
-        "devices": ["xteink-x3", "xteink-x4"],
-        "chipFamilies": ["esp32-c3"],
+        "devices": [
+          "xteink-x3",
+          "xteink-x4"
+        ],
+        "chipFamilies": [
+          "esp32-c3"
+        ],
         "minFirmware": "0.1.0",
         "apiLevel": 1,
         "ramClass": "low",
         "requiresPSRAM": false
       },
       "integrity": {
-        "sha256": "replace-me"
+        "sha256": "bddd23bcad064d02e23f068599c150605c3d967b2f374d45577785191b988ec2"
       },
       "artifact": {
-        "url": "https://github.com/marginalia-os/marginalia-examples/tree/main/game-of-life-sleep-screen",
-        "format": "folder-source"
-      }
+        "url": "https://github.com/marginalia-os/marginalia-examples/releases/download/examples-v0.1.0/org.marginalia.examples.game-of-life-0.1.0.mpkg.zip",
+        "format": "mpkg.zip",
+        "size": 1193
+      },
+      "releasedAt": "2026-05-15T00:00:00Z",
+      "updatedAt": "2026-05-15T00:00:00Z"
     },
     {
       "id": "org.marginalia.examples.hangman",
@@ -62,21 +80,30 @@
       "channel": "experimental",
       "summary": "A simple standalone Hangman game",
       "author": "Marginalia",
+      "homepage": "https://github.com/marginalia-os/marginalia-examples/tree/main/hangman-app",
       "target": {
-        "devices": ["xteink-x3", "xteink-x4"],
-        "chipFamilies": ["esp32-c3"],
+        "devices": [
+          "xteink-x3",
+          "xteink-x4"
+        ],
+        "chipFamilies": [
+          "esp32-c3"
+        ],
         "minFirmware": "0.1.0",
         "apiLevel": 1,
         "ramClass": "low",
         "requiresPSRAM": false
       },
       "integrity": {
-        "sha256": "replace-me"
+        "sha256": "2d19a896634536f5e8dcc94a3927a445317cc266e6bcaccfb675667fea5f38b9"
       },
       "artifact": {
-        "url": "https://github.com/marginalia-os/marginalia-examples/tree/main/hangman-app",
-        "format": "folder-source"
-      }
+        "url": "https://github.com/marginalia-os/marginalia-examples/releases/download/examples-v0.1.0/org.marginalia.examples.hangman-0.1.0.mpkg.zip",
+        "format": "mpkg.zip",
+        "size": 1115
+      },
+      "releasedAt": "2026-05-15T00:00:00Z",
+      "updatedAt": "2026-05-15T00:00:00Z"
     },
     {
       "id": "org.marginalia.examples.reading-stats",
@@ -87,21 +114,30 @@
       "channel": "experimental",
       "summary": "Collects reading session statistics",
       "author": "Marginalia",
+      "homepage": "https://github.com/marginalia-os/marginalia-examples/tree/main/reading-stats-module",
       "target": {
-        "devices": ["xteink-x3", "xteink-x4"],
-        "chipFamilies": ["esp32-c3"],
+        "devices": [
+          "xteink-x3",
+          "xteink-x4"
+        ],
+        "chipFamilies": [
+          "esp32-c3"
+        ],
         "minFirmware": "0.1.0",
         "apiLevel": 1,
         "ramClass": "low",
         "requiresPSRAM": false
       },
       "integrity": {
-        "sha256": "replace-me"
+        "sha256": "b059480fdd10860a60ecba9f3ae7c729b1c4fe64e33493b8ece713ede2514a23"
       },
       "artifact": {
-        "url": "https://github.com/marginalia-os/marginalia-examples/tree/main/reading-stats-module",
-        "format": "folder-source"
-      }
+        "url": "https://github.com/marginalia-os/marginalia-examples/releases/download/examples-v0.1.0/org.marginalia.examples.reading-stats-0.1.0.mpkg.zip",
+        "format": "mpkg.zip",
+        "size": 1165
+      },
+      "releasedAt": "2026-05-15T00:00:00Z",
+      "updatedAt": "2026-05-15T00:00:00Z"
     }
   ]
 }
