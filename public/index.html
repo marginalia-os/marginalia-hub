@@ -686,7 +686,9 @@
       }
 
       async function loadCatalog() {
-        const catalogPath = window.location.hostname.endsWith('vercel.app') ? 'v1/catalog.json' : 'public/v1/catalog.json';
+        const hostname = window.location.hostname.replace(/^\[|\]$/g, '');
+        const localHostnames = ['localhost', '127.0.0.1', '::1', '0.0.0.0', ''];
+        const catalogPath = localHostnames.includes(hostname) ? 'public/v1/catalog.json' : '/v1/catalog.json';
         const response = await fetch(catalogPath);
         if (!response.ok) throw new Error('Catalog request failed');
         const catalog = await response.json();
