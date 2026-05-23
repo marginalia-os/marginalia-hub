@@ -236,6 +236,33 @@
         font: 0.74rem/1 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
       }
 
+      .compat {
+        margin-top: 12px;
+        border: 1px solid var(--rule);
+        padding: 9px 10px;
+        color: var(--muted);
+        font-size: 0.84rem;
+        line-height: 1.35;
+      }
+
+      .compat strong {
+        display: block;
+        color: var(--ink);
+        margin-bottom: 4px;
+      }
+
+      .compat[data-level="supported"] {
+        border-color: var(--green);
+      }
+
+      .compat[data-level="warning"] {
+        border-color: var(--yellow);
+      }
+
+      .compat[data-level="blocked"] {
+        border-color: var(--red);
+      }
+
       .actions {
         display: flex;
         gap: 8px;
@@ -261,6 +288,13 @@
       .link {
         background: var(--ink);
         color: var(--paper);
+      }
+
+      .link[aria-disabled="true"] {
+        background: transparent;
+        color: var(--muted);
+        border-color: var(--rule);
+        cursor: not-allowed;
       }
 
       .empty {
@@ -363,8 +397,29 @@
         entries: [],
         kind: '',
         query: '',
-        device: '',
+        device: 'xteink-x4',
         execution: ''
+      };
+
+      const targetProfiles = {
+        'xteink-x3': {
+          device: 'xteink-x3',
+          chipFamily: 'esp32-c3',
+          firmwareVersion: '1.3.0',
+          packageApiLevel: 1,
+          ramClass: 'low',
+          hasPSRAM: false,
+          artifactFormats: ['mpkg.zip']
+        },
+        'xteink-x4': {
+          device: 'xteink-x4',
+          chipFamily: 'esp32-c3',
+          firmwareVersion: '1.3.0',
+          packageApiLevel: 1,
+          ramClass: 'low',
+          hasPSRAM: false,
+          artifactFormats: ['mpkg.zip']
+        }
       };
 
       const colors = {
@@ -396,6 +451,105 @@
           (!state.device || (target.devices || []).includes(state.device));
       }
 
+      function parseVersion(value) {
+        const match = String(value || '').match(/^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/);
+        return match ? match.slice(1, 4).map(Number) : null;
+      }
+
+      function compareVersions(left, right) {
+        for (let index = 0; index < 3; index += 1) {
+          if (left[index] !== right[index]) return left[index] - right[index];
+        }
+        return 0;
+      }
+
+      function evaluateCompatibility(entry) {
+        if (!state.device) {
+          const results = Object.values(targetProfiles).map(profile => evaluateCompatibilityForProfile(entry, profile));
+          const supported = results.filter(result => result.installable);
+          if (supported.length === results.length) {
+            return {
+              installable: true,
+              level: 'supported',
+              label: 'Installable on all supported devices',
+              message: 'Firmware still verifies the archive hash before install.',
+              reasons: []
+            };
+          }
+          if (supported.length > 0) {
+            return {
+              installable: true,
+              level: 'warning',
+              label: 'Installable on some supported devices',
+              message: supported.map(result => result.profile.device).join(', '),
+              reasons: results.flatMap(result => result.reasons)
+            };
+          }
+          return {
+            installable: false,
+            level: 'blocked',
+            label: 'Blocked on supported devices',
+            message: results.flatMap(result => result.reasons).map(reason => reason.message).join(' '),
+            reasons: results.flatMap(result => result.reasons)
+          };
+        }
+
+        const profile = targetProfiles[state.device] || targetProfiles['xteink-x4'];
+        const result = evaluateCompatibilityForProfile(entry, profile);
+        return {
+          ...result,
+          label: result.installable ? 'Installable on ' + profile.device : 'Blocked on ' + profile.device,
+          message: result.installable
+            ? 'Firmware still verifies the archive hash before install.'
+            : result.reasons.map(reason => reason.message).join(' ')
+        };
+      }
+
+      function evaluateCompatibilityForProfile(entry, profile) {
+        const target = entry.target || {};
+        const artifact = entry.artifact || {};
+        const integrity = entry.integrity || {};
+        const reasons = [];
+
+        if ((target.devices || []).length && !target.devices.includes(profile.device)) {
+          reasons.push({ code: 'unsupported_device', message: 'Does not target ' + profile.device + '.' });
+        }
+        if ((target.chipFamilies || []).length && !target.chipFamilies.includes(profile.chipFamily)) {
+          reasons.push({ code: 'unsupported_chip_family', message: 'Does not target ' + profile.chipFamily + '.' });
+        }
+        if ((target.apiLevel || 1) > profile.packageApiLevel) {
+          reasons.push({ code: 'unsupported_api_level', message: 'Requires package API ' + target.apiLevel + '.' });
+        }
+        if (target.requiresPSRAM && !profile.hasPSRAM) {
+          reasons.push({ code: 'requires_psram', message: 'Requires PSRAM.' });
+        }
+        if (target.ramClass && target.ramClass !== 'low' && profile.ramClass === 'low') {
+          reasons.push({ code: 'unsupported_ram_class', message: 'Requires ' + target.ramClass + ' RAM class.' });
+        }
+        if (target.minFirmware) {
+          const current = parseVersion(profile.firmwareVersion);
+          const required = parseVersion(target.minFirmware);
+          if (!required) {
+            reasons.push({ code: 'invalid_min_firmware', message: 'Invalid minimum firmware value.' });
+          } else if (current && compareVersions(current, required) < 0) {
+            reasons.push({ code: 'requires_newer_firmware', message: 'Requires firmware ' + target.minFirmware + ' or newer.' });
+          }
+        }
+        if (artifact.format && !profile.artifactFormats.includes(artifact.format)) {
+          reasons.push({ code: 'unsupported_artifact_format', message: 'Unsupported artifact format.' });
+        }
+        if (!integrity.sha256) {
+          reasons.push({ code: 'missing_artifact_hash', message: 'Missing artifact SHA-256.' });
+        }
+
+        return {
+          installable: reasons.length === 0,
+          level: reasons.length === 0 ? 'supported' : 'blocked',
+          profile,
+          reasons
+        };
+      }
+
       function renderTabs() {
         const kinds = ['', ...Array.from(new Set(state.entries.map(entry => entry.kind))).sort()];
         const tabs = document.getElementById('kindTabs');
@@ -415,6 +569,7 @@
       }
 
       function packageCard(entry) {
+        const compatibility = evaluateCompatibility(entry);
         const card = document.createElement('article');
         card.className = 'package';
         card.style.setProperty('--accent', colors[entry.kind] || colors.integration);
@@ -458,7 +613,15 @@
           chip.textContent = value;
           chips.appendChild(chip);
         }
-        body.append(summary, chips);
+        const compat = document.createElement('div');
+        compat.className = 'compat';
+        compat.dataset.level = compatibility.level;
+        const compatTitle = document.createElement('strong');
+        compatTitle.textContent = compatibility.label;
+        const compatText = document.createElement('span');
+        compatText.textContent = compatibility.message;
+        compat.append(compatTitle, compatText);
+        body.append(summary, chips, compat);
 
         const actions = document.createElement('div');
         actions.className = 'actions';
@@ -469,7 +632,15 @@
         const download = document.createElement('a');
         download.className = 'link';
         download.href = artifact.url || '#';
-        download.textContent = 'Download';
+        download.textContent = compatibility.installable ? 'Download' : 'Blocked';
+        if (!compatibility.installable) {
+          download.removeAttribute('href');
+          download.setAttribute('aria-disabled', 'true');
+          download.addEventListener('click', event => {
+            event.preventDefault();
+            toast(compatibility.reasons.map(reason => reason.code).join(', '));
+          });
+        }
         const copy = document.createElement('button');
         copy.className = 'copy';
         copy.type = 'button';
@@ -537,6 +708,8 @@
         state.execution = event.target.value;
         render();
       });
+
+      document.getElementById('device').value = state.device;
 
       loadCatalog().catch(error => {
         const catalog = document.getElementById('catalog');
