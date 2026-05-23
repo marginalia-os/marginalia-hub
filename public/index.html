@@ -95,9 +95,9 @@
 
       .snapshot {
         display: grid;
-        grid-template-columns: repeat(3, minmax(82px, 1fr));
+        grid-template-columns: repeat(4, minmax(74px, 1fr));
         gap: 8px;
-        min-width: 280px;
+        min-width: 340px;
       }
 
       .stat {
@@ -362,11 +362,12 @@
           </div>
           <div>
             <h1>Marginalia Hub</h1>
-            <p class="subtitle">Experimental package catalog for reader modules, sleep screens, themes, and apps.</p>
+            <p class="subtitle">Experimental package catalog for themes, integrations, reader modules, sleep screens, and apps.</p>
           </div>
         </div>
         <section class="snapshot" aria-label="Catalog snapshot">
           <div class="stat"><strong id="packageCount">0</strong><span>packages</span></div>
+          <div class="stat"><strong id="staticCount">0</strong><span>static</span></div>
           <div class="stat"><strong id="moduleCount">0</strong><span>modules</span></div>
           <div class="stat"><strong id="appCount">0</strong><span>apps</span></div>
         </section>
@@ -381,6 +382,7 @@
         </select>
         <select class="select" id="execution">
           <option value="">All runtimes</option>
+          <option value="static">Static</option>
           <option value="module">Modules</option>
           <option value="app">Apps</option>
         </select>
@@ -657,6 +659,7 @@
 
       function renderStats(entries) {
         document.getElementById('packageCount').textContent = String(entries.length);
+        document.getElementById('staticCount').textContent = String(entries.filter(entry => entry.execution === 'static').length);
         document.getElementById('moduleCount').textContent = String(entries.filter(entry => entry.execution === 'module').length);
         document.getElementById('appCount').textContent = String(entries.filter(entry => entry.execution === 'app').length);
       }
