@@ -255,6 +255,10 @@
         border-color: var(--green);
       }
 
+      .compat[data-level="warning"] {
+        border-color: var(--amber);
+      }
+
       .compat[data-level="blocked"] {
         border-color: var(--red);
       }
@@ -460,7 +464,48 @@
       }
 
       function evaluateCompatibility(entry) {
+        if (!state.device) {
+          const results = Object.values(targetProfiles).map(profile => evaluateCompatibilityForProfile(entry, profile));
+          const supported = results.filter(result => result.installable);
+          if (supported.length === results.length) {
+            return {
+              installable: true,
+              level: 'supported',
+              label: 'Installable on all supported devices',
+              message: 'Firmware still verifies the archive hash before install.',
+              reasons: []
+            };
+          }
+          if (supported.length > 0) {
+            return {
+              installable: true,
+              level: 'warning',
+              label: 'Installable on some supported devices',
+              message: supported.map(result => result.profile.device).join(', '),
+              reasons: results.flatMap(result => result.reasons)
+            };
+          }
+          return {
+            installable: false,
+            level: 'blocked',
+            label: 'Blocked on supported devices',
+            message: results.flatMap(result => result.reasons).map(reason => reason.message).join(' '),
+            reasons: results.flatMap(result => result.reasons)
+          };
+        }
+
         const profile = targetProfiles[state.device] || targetProfiles['xteink-x4'];
+        const result = evaluateCompatibilityForProfile(entry, profile);
+        return {
+          ...result,
+          label: result.installable ? 'Installable on ' + profile.device : 'Blocked on ' + profile.device,
+          message: result.installable
+            ? 'Firmware still verifies the archive hash before install.'
+            : result.reasons.map(reason => reason.message).join(' ')
+        };
+      }
+
+      function evaluateCompatibilityForProfile(entry, profile) {
         const target = entry.target || {};
         const artifact = entry.artifact || {};
         const integrity = entry.integrity || {};
@@ -500,6 +545,7 @@
         return {
           installable: reasons.length === 0,
           level: reasons.length === 0 ? 'supported' : 'blocked',
+          profile,
           reasons
         };
       }
@@ -571,13 +617,9 @@
         compat.className = 'compat';
         compat.dataset.level = compatibility.level;
         const compatTitle = document.createElement('strong');
-        compatTitle.textContent = compatibility.installable
-          ? 'Installable on ' + (state.device || 'xteink-x4')
-          : 'Blocked on ' + (state.device || 'xteink-x4');
+        compatTitle.textContent = compatibility.label;
         const compatText = document.createElement('span');
-        compatText.textContent = compatibility.installable
-          ? 'Firmware still verifies the archive hash before install.'
-          : compatibility.reasons.map(reason => reason.message).join(' ');
+        compatText.textContent = compatibility.message;
         compat.append(compatTitle, compatText);
         body.append(summary, chips, compat);
 
